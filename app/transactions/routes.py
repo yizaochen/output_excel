@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -6,7 +7,6 @@ from core.database import get_db
 from core.models import CTBCForeignBankSlip
 from transactions.schemas import (
     CreateTransactionRequest,
-    ReadTransactionRequest,
     UpdateTransactionRequest,
     DeleteTransactionRequest,
     ReadTransactionResponse,
@@ -57,14 +57,65 @@ async def create_transaction(
 
 
 # READ
-@router.post("/query", response_model=List[ReadTransactionResponse])
+# @router.get("/")
+@router.get("/", response_model=List[ReadTransactionResponse])
 async def read_transactions(
-    query: ReadTransactionRequest, db: Session = Depends(get_db)
+    bank_slip_date_start: str = datetime.now().strftime("%Y-%m-%d"),
+    bank_slip_date_end: str = datetime.now().strftime("%Y-%m-%d"),
+    bank_slip_customer: str = "All",
+    predict_type: str = "All",
+    process_status: str = "All",
+    reference_number: str = "All",
+    db: Session = Depends(get_db),
 ):
+    # return {
+    #     "bank_slip_date_start": bank_slip_date_start,
+    #     "bank_slip_date_end": bank_slip_date_end,
+    #     "bank_slip_customer": bank_slip_customer,
+    #     "predict_type": predict_type,
+    #     "process_status": process_status,
+    #     "reference_number": reference_number,
+    # }
     try:
+        start_date = datetime.strptime(bank_slip_date_start, "%Y-%m-%d")
+        end_date = datetime.strptime(bank_slip_date_end, "%Y-%m-%d")
+
+        # first criteria:  bank_slip_date_start <=  BankSlipDate <= bank_slip_date_end
         results: List[CTBCForeignBankSlip] = (
-            db.query(CTBCForeignBankSlip).filter_by(query.model_dump()).all()
-        )
+            db.query(CTBCForeignBankSlip).filter(
+                CTBCForeignBankSlip.BankSlipDate >= start_date,
+                CTBCForeignBankSlip.BankSlipDate <= end_date,
+            )
+        ).all()
+
+        # second criteria:  bank_slip_customer
+        if bank_slip_customer != "All":
+            results = [
+                result
+                for result in results
+                if result.BankSlipCustomer == bank_slip_customer
+            ]
+
+        # third criteria:  predict_type
+        if predict_type != "All":
+            results = [
+                result for result in results if result.PredictType == predict_type
+            ]
+
+        # fourth criteria:  process_status
+        if process_status != "All":
+            results = [
+                result for result in results if result.ProcessStatus == process_status
+            ]
+
+        # fifth criteria:  reference_number
+        if reference_number != "All":
+            results = [
+                result
+                for result in results
+                if result.ReferenceNumber == reference_number
+            ]
+
         return [
             ReadTransactionResponse(
                 id=result.id,

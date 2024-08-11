@@ -1,4 +1,3 @@
-from typing import Union
 from pydantic import BaseModel
 import datetime
 
@@ -20,17 +19,6 @@ class CreateTransactionRequest(BaseModel):
     bank_slip_remark: str
     change_date: datetime.date
     ar_no: str
-
-
-class ReadTransactionRequest(BaseModel):
-    bank_slip_date_start: Union[datetime.date, None] = None
-    bank_slip_date_end: Union[datetime.date, None] = None
-    bank_slip_customer: Union[str, None] = None  # customer name in bank slip
-    predict_type: Union[str, None] = None  # ('A', 'B', 'C', 'D')
-    process_status: Union[str, None] = (
-        None  # ('Processing', 'Fail', 'Finish', 'Cancel', 'Duplicate')
-    )
-    reference_number: Union[str, None] = None
 
 
 class UpdateTransactionRequest(BaseModel):

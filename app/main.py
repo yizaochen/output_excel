@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -18,4 +20,13 @@ app.include_router(transactions_router)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    bank_slip_date_start = datetime.now().strftime("%Y-%m-%d")
+    bank_slip_date_end = datetime.now().strftime("%Y-%m-%d")
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "bank_slip_date_start": bank_slip_date_start,
+            "bank_slip_date_end": bank_slip_date_end,
+        },
+    )
