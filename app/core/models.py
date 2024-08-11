@@ -8,7 +8,7 @@ from datetime import date
 class CTBCForeignBankSlip(Base):
     __tablename__ = "AutoAR_CTBCForeign_BankSlip"
 
-    id: Mapped[int] = mapped_column("id", INTEGER, primary_key=True)
+    id: Mapped[int] = mapped_column("id", INTEGER, primary_key=True, autoincrement=True)
     BankSlipDate: Mapped[date] = mapped_column("BankSlipDate", TEXT, nullable=False)
     CustomerID: Mapped[str] = mapped_column("CustomerID", TEXT, nullable=False)
     BankCode: Mapped[str] = mapped_column("BankCode", TEXT, nullable=False)
