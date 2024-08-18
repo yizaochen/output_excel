@@ -21,6 +21,7 @@
       <th>Bank Slip Remark</th>
       <th>Change Date</th>
       <th>AR No</th>
+      <th>Edit</th>
     </tr>
   </thead>
   <tbody>
@@ -43,10 +44,298 @@
       <td>{{ transaction.bank_slip_remark }}</td>
       <td>{{ transaction.change_date }}</td>
       <td>{{ transaction.ar_no }}</td>
+      <td>
+        <button
+          class="btn btn-primary btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#editModal"
+          data-id="{{ transaction.id }}"
+          data-bank_slip_date="{{ transaction.bank_slip_date }}"
+          data-customer_id="{{ transaction.customer_id }}"
+          data-bank_code="{{ transaction.bank_code }}"
+          data-bank_slip_currency="{{ transaction.bank_slip_currency }}"
+          data-bank_slip_amount="{{ transaction.bank_slip_amount }}"
+          data-customer_name="{{ transaction.customer_name }}"
+          data-bank_slip_customer="{{ transaction.bank_slip_customer }}"
+          data-country="{{ transaction.country }}"
+          data-file_path="{{ transaction.file_path }}"
+          data-predict_type="{{ transaction.predict_type }}"
+          data-process_status="{{ transaction.process_status }}"
+          data-reference_number="{{ transaction.reference_number }}"
+          data-remit_type="{{ transaction.remit_type }}"
+          data-bank_slip_remark="{{ transaction.bank_slip_remark }}"
+          data-change_date="{{ transaction.change_date }}"
+          data-ar_no="{{ transaction.ar_no }}"
+        >
+          Edit
+        </button>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 <button id="generate-excel" class="btn btn-primary">Generate Excel</button>
 
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Transaction</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" method="post" action="/update-transaction">
+          <input type="hidden" name="id" id="edit-id" />
+
+          <div class="mb-3">
+            <label for="edit-bank_slip_date" class="form-label"
+              >Bank Slip Date</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_slip_date"
+              name="bank_slip_date"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="edit-customer_id" class="form-label">Customer ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-customer_id"
+              name="customer_id"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-bank_code" class="form-label">Bank Code</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_code"
+              name="bank_code"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-bank_slip_currency" class="form-label"
+              >Bank Slip Currency</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_slip_currency"
+              name="bank_slip_currency"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-bank_slip_amount" class="form-label"
+              >Bank Slip Amount</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_slip_amount"
+              name="bank_slip_amount"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-customer_name" class="form-label"
+              >Customer Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-customer_name"
+              name="customer_name"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-bank_slip_customer" class="form-label"
+              >Bank Slip Customer</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_slip_customer"
+              name="bank_slip_customer"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-country" class="form-label">Country</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-country"
+              name="country"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-file_path" class="form-label">File Path</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-file_path"
+              name="file_path"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-predict_type" class="form-label"
+              >Predict Type</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-predict_type"
+              name="predict_type"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-process_status" class="form-label"
+              >Process Status</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-process_status"
+              name="process_status"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-reference_number" class="form-label"
+              >Reference Number</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-reference_number"
+              name="reference_number"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-remit_type" class="form-label">Remit Type</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-remit_type"
+              name="remit_type"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-bank_slip_remark" class="form-label"
+              >Bank Slip Remark</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="edit-bank_slip_remark"
+              name="bank_slip_remark"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-change_date" class="form-label">Change Date</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-change_date"
+              name="change_date"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-ar_no" class="form-label">AR No</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-ar_no"
+              name="ar_no"
+            />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block js_container %}
+<script src="{{ url_for('static', path='js/xlsx.full.min.js') }}"></script>
+<script src="{{ url_for('static', path='js/generate_excel.js') }}"></script>
+<script>
+  var editModal = document.getElementById("editModal");
+  editModal.addEventListener("show.bs.modal", function (event) {
+    var button = event.relatedTarget;
+    var id = button.getAttribute("data-id");
+    var bank_slip_date = button.getAttribute("data-bank_slip_date");
+    var customer_id = button.getAttribute("data-customer_id");
+    var bank_code = button.getAttribute("data-bank_code");
+    var bank_slip_currency = button.getAttribute("data-bank_slip_currency");
+    var bank_slip_amount = button.getAttribute("data-bank_slip_amount");
+    var customer_name = button.getAttribute("data-customer_name");
+    var bank_slip_customer = button.getAttribute("data-bank_slip_customer");
+    var country = button.getAttribute("data-country");
+    var file_path = button.getAttribute("data-file_path");
+    var predict_type = button.getAttribute("data-predict_type");
+    var process_status = button.getAttribute("data-process_status");
+    var reference_number = button.getAttribute("data-reference_number");
+    var remit_type = button.getAttribute("data-remit_type");
+    var bank_slip_remark = button.getAttribute("data-bank_slip_remark");
+    var change_date = button.getAttribute("data-change_date");
+    var ar_no = button.getAttribute("data-ar_no");
+
+    // Fill the form fields with the data
+    var modal = this;
+    modal.querySelector("#edit-id").value = id;
+    modal.querySelector("#edit-bank_slip_date").value = bank_slip_date;
+    modal.querySelector("#edit-customer_id").value = customer_id;
+    modal.querySelector("#edit-bank_code").value = bank_code;
+    modal.querySelector("#edit-bank_slip_currency").value = bank_slip_currency;
+    modal.querySelector("#edit-bank_slip_amount").value = bank_slip_amount;
+    modal.querySelector("#edit-customer_name").value = customer_name;
+    modal.querySelector("#edit-bank_slip_customer").value = bank_slip_customer;
+    modal.querySelector("#edit-country").value = country;
+    modal.querySelector("#edit-file_path").value = file_path;
+    modal.querySelector("#edit-predict_type").value = predict_type;
+    modal.querySelector("#edit-process_status").value = process_status;
+    modal.querySelector("#edit-reference_number").value = reference_number;
+    modal.querySelector("#edit-remit_type").value = remit_type;
+    modal.querySelector("#edit-bank_slip_remark").value = bank_slip_remark;
+    modal.querySelector("#edit-change_date").value = change_date;
+    modal.querySelector("#edit-ar_no").value = ar_no;
+  });
+</script>
 {% endblock %}

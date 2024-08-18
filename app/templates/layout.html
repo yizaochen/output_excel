@@ -39,30 +39,6 @@
     <div class="container my-5">{% block container %} {% endblock %}</div>
 
     <script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script>
-      document
-        .getElementById("generate-excel")
-        .addEventListener("click", function () {
-          var data = [];
-          var table = document.querySelector("table");
-          var rows = table.querySelectorAll("tr");
-
-          rows.forEach(function (row) {
-            var rowData = [];
-            var cells = row.querySelectorAll("th, td");
-            cells.forEach(function (cell) {
-              rowData.push(cell.innerText);
-            });
-            data.push(rowData);
-          });
-
-          var worksheet = XLSX.utils.aoa_to_sheet(data);
-          var workbook = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-
-          XLSX.writeFile(workbook, "transactions.xlsx");
-        });
-    </script>
+    {% block js_container %} {% endblock %}
   </body>
 </html>
