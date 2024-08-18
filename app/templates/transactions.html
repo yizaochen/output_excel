@@ -1,0 +1,52 @@
+{% extends "layout.html" %} {% block container %}
+
+<h2 class="mb-4">Transaction List</h2>
+<table class="table table-bordered">
+  <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Bank Slip Date</th>
+      <th>Customer ID</th>
+      <th>Bank Code</th>
+      <th>Bank Slip Currency</th>
+      <th>Bank Slip Amount</th>
+      <th>Customer Name</th>
+      <th>Bank Slip Customer</th>
+      <th>Country</th>
+      <th>File Path</th>
+      <th>Predict Type</th>
+      <th>Process Status</th>
+      <th>Reference Number</th>
+      <th>Remit Type</th>
+      <th>Bank Slip Remark</th>
+      <th>Change Date</th>
+      <th>AR No</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaction in transactions %}
+    <tr>
+      <td>{{ transaction.id }}</td>
+      <td>{{ transaction.bank_slip_date }}</td>
+      <td>{{ transaction.customer_id }}</td>
+      <td>{{ transaction.bank_code }}</td>
+      <td>{{ transaction.bank_slip_currency }}</td>
+      <td>{{ transaction.bank_slip_amount }}</td>
+      <td>{{ transaction.customer_name }}</td>
+      <td>{{ transaction.bank_slip_customer }}</td>
+      <td>{{ transaction.country }}</td>
+      <td>{{ transaction.file_path }}</td>
+      <td>{{ transaction.predict_type }}</td>
+      <td>{{ transaction.process_status }}</td>
+      <td>{{ transaction.reference_number }}</td>
+      <td>{{ transaction.remit_type }}</td>
+      <td>{{ transaction.bank_slip_remark }}</td>
+      <td>{{ transaction.change_date }}</td>
+      <td>{{ transaction.ar_no }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<button id="generate-excel" class="btn btn-primary">Generate Excel</button>
+
+{% endblock %}

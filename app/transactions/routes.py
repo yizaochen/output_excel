@@ -1,7 +1,8 @@
 from typing import List
 from datetime import datetime
-from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from core.database import get_db
 from core.models import CTBCForeignBankSlip
@@ -18,6 +19,7 @@ router = APIRouter(
     tags=["transactions"],
     responses={404: {"description": "API Not found"}},
 )
+templates = Jinja2Templates(directory="templates")
 
 
 # CREATE
@@ -57,9 +59,9 @@ async def create_transaction(
 
 
 # READ
-# @router.get("/")
-@router.get("/", response_model=List[ReadTransactionResponse])
+@router.get("/", response_class=HTMLResponse)
 async def read_transactions(
+    request: Request,
     bank_slip_date_start: str = datetime.now().strftime("%Y-%m-%d"),
     bank_slip_date_end: str = datetime.now().strftime("%Y-%m-%d"),
     bank_slip_customer: str = "All",
@@ -68,14 +70,6 @@ async def read_transactions(
     reference_number: str = "All",
     db: Session = Depends(get_db),
 ):
-    # return {
-    #     "bank_slip_date_start": bank_slip_date_start,
-    #     "bank_slip_date_end": bank_slip_date_end,
-    #     "bank_slip_customer": bank_slip_customer,
-    #     "predict_type": predict_type,
-    #     "process_status": process_status,
-    #     "reference_number": reference_number,
-    # }
     try:
         start_date = datetime.strptime(bank_slip_date_start, "%Y-%m-%d")
         end_date = datetime.strptime(bank_slip_date_end, "%Y-%m-%d")
@@ -116,7 +110,7 @@ async def read_transactions(
                 if result.ReferenceNumber == reference_number
             ]
 
-        return [
+        transactions = [
             ReadTransactionResponse(
                 id=result.id,
                 bank_slip_date=result.BankSlipDate,
@@ -138,6 +132,9 @@ async def read_transactions(
             )
             for result in results
         ]
+        return templates.TemplateResponse(
+            "transactions.html", {"request": request, "transactions": transactions}
+        )
     except Exception as e:
         return JSONResponse(
             content={"message": f"An error occurred: {e}"}, status_code=500
