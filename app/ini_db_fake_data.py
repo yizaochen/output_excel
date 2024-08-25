@@ -1,3 +1,13 @@
+from pathlib import Path
+from core.database import SessionLocal, engine
+from core.models import (
+    Base,
+    CTBCForeignBankSlip,
+    CTBCForeignSAP,
+    CTBCForeignSpecialCustomer,
+)
+
+
 bankslip_lst = [
     {
         "id": 1,
@@ -208,3 +218,26 @@ special_customer_lst = [
     {"id": 1, "CustomerName": "Meta"},
     {"id": 2, "CustomerName": "Amazon"},
 ]
+
+
+def main():
+    # check sqite.db is exist
+    sqlite_path = Path("sqlite.db")
+    if sqlite_path.exists():
+        print("sqlite.db already exists.")
+        return
+
+    Base.metadata.create_all(bind=engine)
+    with SessionLocal() as db:
+        for bankslip in bankslip_lst:
+            db.add(CTBCForeignBankSlip(**bankslip))
+        for sap in sap_lst:
+            db.add(CTBCForeignSAP(**sap))
+        for special_customer in special_customer_lst:
+            db.add(CTBCForeignSpecialCustomer(**special_customer))
+        db.commit()
+        print("Fake data created.")
+
+
+if __name__ == "__main__":
+    main()

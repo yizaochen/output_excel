@@ -26,24 +26,24 @@
   </thead>
   <tbody>
     {% for transaction in transactions %}
-    <tr>
-      <td>{{ transaction.id }}</td>
-      <td>{{ transaction.bank_slip_date }}</td>
-      <td>{{ transaction.customer_id }}</td>
-      <td>{{ transaction.bank_code }}</td>
-      <td>{{ transaction.bank_slip_currency }}</td>
-      <td>{{ transaction.bank_slip_amount }}</td>
-      <td>{{ transaction.customer_name }}</td>
-      <td>{{ transaction.bank_slip_customer }}</td>
-      <td>{{ transaction.country }}</td>
-      <td>{{ transaction.file_path }}</td>
-      <td>{{ transaction.predict_type }}</td>
-      <td>{{ transaction.process_status }}</td>
-      <td>{{ transaction.reference_number }}</td>
-      <td>{{ transaction.remit_type }}</td>
-      <td>{{ transaction.bank_slip_remark }}</td>
-      <td>{{ transaction.change_date }}</td>
-      <td>{{ transaction.ar_no }}</td>
+    <tr id="tr-{{ transaction.id }}">
+      <td class="id">{{ transaction.id }}</td>
+      <td class="bank_slip_date">{{ transaction.bank_slip_date }}</td>
+      <td class="customer_id">{{ transaction.customer_id }}</td>
+      <td class="bank_code">{{ transaction.bank_code }}</td>
+      <td class="bank_slip_currency">{{ transaction.bank_slip_currency }}</td>
+      <td class="bank_slip_amount">{{ transaction.bank_slip_amount }}</td>
+      <td class="customer_name">{{ transaction.customer_name }}</td>
+      <td class="bank_slip_customer">{{ transaction.bank_slip_customer }}</td>
+      <td class="country">{{ transaction.country }}</td>
+      <td class="file_path">{{ transaction.file_path }}</td>
+      <td class="predict_type">{{ transaction.predict_type }}</td>
+      <td class="process_status">{{ transaction.process_status }}</td>
+      <td class="reference_number">{{ transaction.reference_number }}</td>
+      <td class="remit_type">{{ transaction.remit_type }}</td>
+      <td class="bank_slip_remark">{{ transaction.bank_slip_remark }}</td>
+      <td class="change_date">{{ transaction.change_date }}</td>
+      <td class="ar_no">{{ transaction.ar_no }}</td>
       <td>
         <button
           class="btn btn-primary btn-sm"
@@ -96,7 +96,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form id="editForm" method="post" action="/update-transaction">
+        <form id="editForm">
           <input type="hidden" name="id" id="edit-id" />
 
           <div class="mb-3">
@@ -294,48 +294,5 @@
 </div>
 {% endblock %} {% block js_container %}
 <script src="{{ url_for('static', path='js/xlsx.full.min.js') }}"></script>
-<script src="{{ url_for('static', path='js/generate_excel.js') }}"></script>
-<script>
-  var editModal = document.getElementById("editModal");
-  editModal.addEventListener("show.bs.modal", function (event) {
-    var button = event.relatedTarget;
-    var id = button.getAttribute("data-id");
-    var bank_slip_date = button.getAttribute("data-bank_slip_date");
-    var customer_id = button.getAttribute("data-customer_id");
-    var bank_code = button.getAttribute("data-bank_code");
-    var bank_slip_currency = button.getAttribute("data-bank_slip_currency");
-    var bank_slip_amount = button.getAttribute("data-bank_slip_amount");
-    var customer_name = button.getAttribute("data-customer_name");
-    var bank_slip_customer = button.getAttribute("data-bank_slip_customer");
-    var country = button.getAttribute("data-country");
-    var file_path = button.getAttribute("data-file_path");
-    var predict_type = button.getAttribute("data-predict_type");
-    var process_status = button.getAttribute("data-process_status");
-    var reference_number = button.getAttribute("data-reference_number");
-    var remit_type = button.getAttribute("data-remit_type");
-    var bank_slip_remark = button.getAttribute("data-bank_slip_remark");
-    var change_date = button.getAttribute("data-change_date");
-    var ar_no = button.getAttribute("data-ar_no");
-
-    // Fill the form fields with the data
-    var modal = this;
-    modal.querySelector("#edit-id").value = id;
-    modal.querySelector("#edit-bank_slip_date").value = bank_slip_date;
-    modal.querySelector("#edit-customer_id").value = customer_id;
-    modal.querySelector("#edit-bank_code").value = bank_code;
-    modal.querySelector("#edit-bank_slip_currency").value = bank_slip_currency;
-    modal.querySelector("#edit-bank_slip_amount").value = bank_slip_amount;
-    modal.querySelector("#edit-customer_name").value = customer_name;
-    modal.querySelector("#edit-bank_slip_customer").value = bank_slip_customer;
-    modal.querySelector("#edit-country").value = country;
-    modal.querySelector("#edit-file_path").value = file_path;
-    modal.querySelector("#edit-predict_type").value = predict_type;
-    modal.querySelector("#edit-process_status").value = process_status;
-    modal.querySelector("#edit-reference_number").value = reference_number;
-    modal.querySelector("#edit-remit_type").value = remit_type;
-    modal.querySelector("#edit-bank_slip_remark").value = bank_slip_remark;
-    modal.querySelector("#edit-change_date").value = change_date;
-    modal.querySelector("#edit-ar_no").value = ar_no;
-  });
-</script>
+<script src="{{ url_for('static', path='js/transactions.js') }}"></script>
 {% endblock %}

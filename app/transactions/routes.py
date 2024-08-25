@@ -133,7 +133,12 @@ async def read_transactions(
             for result in results
         ]
         return templates.TemplateResponse(
-            "transactions.html", {"request": request, "transactions": transactions}
+            "transactions.html",
+            {
+                "request": request,
+                "active_page": "Transactions",
+                "transactions": transactions,
+            },
         )
     except Exception as e:
         return JSONResponse(
@@ -142,9 +147,10 @@ async def read_transactions(
 
 
 # UPDATE
-@router.put("/")
+@router.post("/update")
 async def update_transaction(
-    transaction: UpdateTransactionRequest, db: Session = Depends(get_db)
+    transaction: UpdateTransactionRequest,
+    db: Session = Depends(get_db),
 ):
     try:
         bank_slip = db.query(CTBCForeignBankSlip).filter_by(id=transaction.id).first()

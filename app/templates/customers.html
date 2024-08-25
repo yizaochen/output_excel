@@ -1,0 +1,66 @@
+{% extends "layout.html" %}{% block container %}
+<h1 class="mb-4">Search SAP Customer ID / Customer Name</h1>
+<div class="mb-3">
+  <label for="searchType" class="form-label">Select Search Type</label>
+  <select id="searchType" class="form-select" onchange="toggleSearchField()">
+    <option value="name">Search by Customer Name</option>
+    <option value="id">Search by Customer ID</option>
+    <option value="all">Show All</option>
+  </select>
+</div>
+
+<!-- Form for searching by Customer Name -->
+<form
+  id="searchByNameForm"
+  action="/customers/search-by-name"
+  method="GET"
+  class="mb-4"
+>
+  <div class="mb-3">
+    <label for="customerName" class="form-label">Customer Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="customerName"
+      name="customerName"
+      placeholder="Enter Customer Name"
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<!-- Form for searching by Customer ID -->
+<form
+  id="searchByIDForm"
+  action="/customers/search-by-id"
+  method="GET"
+  style="display: none"
+  class="mb-4"
+>
+  <div class="mb-3">
+    <label for="customerID" class="form-label">Customer ID</label>
+    <input
+      type="text"
+      class="form-control"
+      id="customerID"
+      name="customerID"
+      placeholder="Enter Customer ID"
+    />
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<!-- Button for showing all records -->
+<form
+  id="showAllForm"
+  action="/customers/show-all"
+  method="GET"
+  style="display: none"
+  class="mb-4"
+>
+  <button type="submit" class="btn btn-secondary">Show All Customers</button>
+</form>
+
+{% endblock %} {% block js_container %}
+<script src="{{ url_for('static', path='js/customers.js') }}"></script>
+{% endblock %}
