@@ -1,11 +1,10 @@
-from typing import List
-from datetime import datetime
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from core.database import get_db
 from core.models import CTBCForeignSAP
+from customers.schemas import UpdateCustomerRequest
 
 
 router = APIRouter(
@@ -86,3 +85,28 @@ async def show_all(request: Request, db: Session = Depends(get_db)):
             "customers": customers,
         },
     )
+
+
+# UPDATE
+@router.post("/update")
+async def update_transaction(
+    customer_request: UpdateCustomerRequest,
+    db: Session = Depends(get_db),
+):
+    try:
+        customer = db.query(CTBCForeignSAP).filter_by(id=customer_request.id).first()
+        if not customer:
+            return JSONResponse(
+                content={"message": "Customer not found"}, status_code=404
+            )
+        customer.CustomerID = customer_request.customer_id
+        customer.CustomerName = customer_request.customer_name
+        db.commit()
+        return JSONResponse(
+            content={"message": "Customer updated successfully"},
+            status_code=200,
+        )
+    except Exception as e:
+        return JSONResponse(
+            content={"message": f"An error occurred: {e}"}, status_code=500
+        )

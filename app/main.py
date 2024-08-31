@@ -7,6 +7,7 @@ from starlette.staticfiles import StaticFiles
 
 from transactions.routes import router as transactions_router
 from customers.routes import router as customers_router
+from d_customers.routes import router as d_customers_router
 from core.models import Base
 from core.database import engine
 
@@ -18,6 +19,7 @@ templates = Jinja2Templates(directory="templates")
 
 app.include_router(transactions_router)
 app.include_router(customers_router)
+app.include_router(d_customers_router)
 
 
 @app.get("/", response_class=HTMLResponse)
