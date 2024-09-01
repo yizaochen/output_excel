@@ -77,9 +77,6 @@ editForm.addEventListener("submit", async function (event) {
       // Close the modal
       const modal = bootstrap.Modal.getInstance(editModal);
       modal.hide();
-
-      // Notify user of success
-      alert("Transaction updated successfully!");
     } else {
       alert("Failed to update transaction.");
       throw new Error("Failed to update transaction.");

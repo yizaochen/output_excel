@@ -6,9 +6,10 @@
       <th>ID</th>
       <th>Customer Name</th>
       <th>Edit</th>
+      <th>Delete</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="table-body">
     {% for customer in customers %}
     <tr id="tr-{{ customer.id }}">
       <td class="id">{{ customer.id }}</td>
@@ -22,6 +23,17 @@
           data-customer_name="{{ customer.CustomerName }}"
         >
           Edit
+        </button>
+      </td>
+      <td>
+        <button
+          class="btn btn-danger btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal"
+          data-id="{{ customer.id }}"
+          data-customer_name="{{ customer.CustomerName }}"
+        >
+          Delete
         </button>
       </td>
     </tr>
@@ -71,6 +83,7 @@
               class="form-control"
               id="edit-customer_name"
               name="customer_name"
+              autocomplete="off"
             />
           </div>
 
@@ -121,6 +134,7 @@
               class="form-control"
               id="add-customer_name"
               name="customer_name"
+              autocomplete="off"
             />
           </div>
 
@@ -134,6 +148,50 @@
             </button>
 
             <button type="submit" class="btn btn-primary">Add Customer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Customer</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="deleteForm">
+          <input type="hidden" name="id" id="delete-id" />
+
+          <div class="mb-3">
+            <p id="delete-reminder"></p>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <button type="submit" class="btn btn-danger">Delete</button>
           </div>
         </form>
       </div>

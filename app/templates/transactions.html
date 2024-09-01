@@ -36,8 +36,22 @@
       <td class="customer_name">{{ transaction.customer_name }}</td>
       <td class="bank_slip_customer">{{ transaction.bank_slip_customer }}</td>
       <td class="country">{{ transaction.country }}</td>
-      <td class="file_path">{{ transaction.file_path }}</td>
+      <td class="file_path">
+        <a
+          href="{{ url_for('static', path='data/example.pdf') }}"
+          target="_blank"
+          >{{ transaction.file_path }}</a
+        >
+      </td>
+      {% if transaction.predict_type == 'A' %}
+      <td class="predict_type text-primary">{{ transaction.predict_type }}</td>
+      {% elif transaction.predict_type == 'E' %}
+      <td class="predict_type text-success">{{ transaction.predict_type }}</td>
+      {% elif transaction.predict_type == 'F' %}
+      <td class="predict_type text-danger">{{ transaction.predict_type }}</td>
+      {% else %}
       <td class="predict_type">{{ transaction.predict_type }}</td>
+      {% endif %}
       <td class="process_status">{{ transaction.process_status }}</td>
       <td class="reference_number">{{ transaction.reference_number }}</td>
       <td class="remit_type">{{ transaction.remit_type }}</td>

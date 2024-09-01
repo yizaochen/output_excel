@@ -17,12 +17,13 @@ addForm.addEventListener("submit", async function (event) {
 
     if (response.ok) {
       // Get the response data
-      const response_data = await response.json;
-      const id_in_db = response_data.id;
+      const response_data = await response.json();
+      const id_in_db = response_data.id_in_db;
       const customer_name = response_data.customer_name;
 
       // Add new row to table
       const table = document.getElementById("table-body");
+
       const newRow = table.insertRow();
       newRow.id = `tr-${id_in_db}`;
       newRow.innerHTML = `
@@ -31,20 +32,23 @@ addForm.addEventListener("submit", async function (event) {
         <td>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary btn-sm"
             data-bs-toggle="modal"
             data-bs-target="#editModal"
-            data-id="${customer_name}"
+            data-id="${id_in_db}"
             data-customer_name="${customer_name}"
           >
             Edit
           </button>
+        </td>
+        <td>
           <button
             type="button"
-            class="btn btn-danger"
+            class="btn btn-danger btn-sm"
             data-bs-toggle="modal"
             data-bs-target="#deleteModal"
             data-id="${id_in_db}"
+            data-customer_name="${customer_name}"
           >
             Delete
           </button>
@@ -56,9 +60,6 @@ addForm.addEventListener("submit", async function (event) {
       // Close the modal
       const modal = bootstrap.Modal.getInstance(addModal);
       modal.hide();
-
-      // Notify user of success
-      alert("Customer added successfully!");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -112,12 +113,55 @@ editForm.addEventListener("submit", async function (event) {
       // Close the modal
       const modal = bootstrap.Modal.getInstance(editModal);
       modal.hide();
-
-      // Notify user of success
-      alert("Customer updated successfully!");
     } else {
       alert("Failed to update customer.");
       throw new Error("Failed to update customer.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert(`An error occurred: ${error.message}`);
+  }
+});
+
+// Delete modal population
+const deleteModal = document.getElementById("deleteModal");
+deleteModal.addEventListener("show.bs.modal", (event) => {
+  const dataset = event.relatedTarget.dataset;
+  const modal = event.currentTarget;
+  const idInput = modal.querySelector(`#delete-id`);
+  idInput.value = dataset.id;
+  const deleteReminder = modal.querySelector("#delete-reminder");
+  deleteReminder.innerHTML = `Are you sure you want to delete <strong>${dataset.customer_name}</strong> from D-type customer list?`;
+});
+
+// Delete form submission
+const deleteForm = document.getElementById("deleteForm");
+deleteForm.addEventListener("submit", async function (event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const response = await fetch("/d_customers/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      // Remove table row
+      const tr = document.getElementById(`tr-${data.id}`);
+      if (tr) tr.remove();
+
+      // Close the modal
+      const modal = bootstrap.Modal.getInstance(deleteModal);
+      modal.hide();
+    } else {
+      alert("Failed to delete customer.");
+      throw new Error("Failed to delete customer.");
     }
   } catch (error) {
     console.error("Error:", error);

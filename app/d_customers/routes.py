@@ -4,7 +4,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from core.database import get_db
 from core.models import CTBCForeignSpecialCustomer
-from d_customers.schemas import UpdateCustomerRequest
+from d_customers.schemas import (
+    UpdateCustomerRequest,
+    AddCustomerRequest,
+    DeleteCustomerRequest,
+)
 
 
 router = APIRouter(
@@ -30,23 +34,21 @@ async def index(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/add")
-async def add_transaction(
-    new_customer_name: str,
+async def add_customer(
+    add_customer_request: AddCustomerRequest,
     db: Session = Depends(get_db),
 ):
     try:
-        new_customer = CTBCForeignSpecialCustomer(CustomerName=new_customer_name)
+        new_customer = CTBCForeignSpecialCustomer(
+            CustomerName=add_customer_request.customer_name
+        )
         db.add(new_customer)
         db.commit()
-
-        # get the id of the newly added customer
-        new_customer_id = new_customer.id
-
         return JSONResponse(
             content={
                 "message": "D-type Customer added successfully",
-                "id": new_customer_id,
-                "name": new_customer_name,
+                "id_in_db": new_customer.id,
+                "customer_name": new_customer.CustomerName,
             },
             status_code=200,
         )
@@ -58,12 +60,14 @@ async def add_transaction(
 
 @router.post("/delete")
 async def delete_transaction(
-    customer_id: int,
+    delete_customer_request: DeleteCustomerRequest,
     db: Session = Depends(get_db),
 ):
     try:
         customer = (
-            db.query(CTBCForeignSpecialCustomer).filter_by(id=customer_id).first()
+            db.query(CTBCForeignSpecialCustomer)
+            .filter_by(id=delete_customer_request.id)
+            .first()
         )
         if not customer:
             return JSONResponse(
